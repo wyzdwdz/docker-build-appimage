@@ -2,13 +2,13 @@ ARG TARGETARCH
 
 FROM ubuntu:18.04 AS base
 
-FROM base AS amd64
+FROM base AS branch-amd64
 ARG ARCH=x86_64
 
-FROM base AS arm64
+FROM base AS branch-arm64
 ARG ARCH=aarch64
 
-FROM ${TARGETARCH} AS selected
+FROM branch-${TARGETARCH} AS selected
  
 RUN apt update && apt -y upgrade
 RUN apt -y install build-essential pkg-config git
