@@ -11,9 +11,17 @@ FROM branch-${TARGETARCH} AS branch-selected
  
 RUN apt update && apt -y upgrade
 RUN apt -y install build-essential pkg-config git
-RUN DEBIAN_FRONTEND=noninteractive apt -y install xorg
+RUN apt -y install xvfb rxvt xauth x11vnc x11-utils x11-xserver-utils
 
-RUN apt -y install python3 python3-pip python3-markupsafe
+RUN apt -y install python3 python3-pip python3-markupsafe software-properties-common
+RUN sed -i 's|#!/usr/bin/python3|#!/usr/bin/python3.6|g' /usr/bin/add-apt-repository
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN add-apt-repository -y ppa:deadsnakes/ppa && apt update
+RUN apt -y install python3.8
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
+RUN update-alternatives --set python3 /usr/bin/python3.8
 RUN pip3 install conan==2.0.4
 RUN conan profile detect
 
@@ -39,7 +47,6 @@ RUN git clone --recurse-submodules https://github.com/linuxdeploy/linuxdeploy.gi
 WORKDIR /tmp/linuxdeploy/build
 RUN apt -y install patchelf libpng-dev libjpeg-dev
 RUN cmake .. -DBUILD_TESTING=FALSE
-RUN apt -y install software-properties-common
 RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test && apt update
 RUN apt -y install gcc-9 g++-9
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 2 --slave /usr/bin/g++ g++ /usr/bin/g++-9
@@ -50,12 +57,3 @@ RUN make -j && make install
 RUN update-alternatives --set gcc /usr/bin/gcc-7
 WORKDIR /tmp
 RUN rm -rf /tmp/linuxdeploy
-
-ENV TZ=UTC
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN add-apt-repository -y ppa:deadsnakes/ppa && apt update
-RUN apt -y install python3.7
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
-RUN update-alternatives --set python3 /usr/bin/python3.7
-RUN sed -i 's|#!/usr/bin/python3|#!/usr/bin/python3.6|g' /usr/bin/add-apt-repository
