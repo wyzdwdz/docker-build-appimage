@@ -52,7 +52,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Create and push manifest images
-        uses: Noelware/docker-manifest-action@v0.3.1
+        uses: Noelware/docker-manifest-action@0.3.1
         with:
           inputs: ${{ steps.meta.outputs.labels }}
           images: ${{ steps.meta.outputs.labels }}-arm64,${{ steps.meta.outputs.labels }}-arm64
