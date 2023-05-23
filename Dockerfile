@@ -8,7 +8,7 @@ ARG ARCH=x86_64
 FROM base AS branch-arm64
 ARG ARCH=aarch64
 
-FROM branch-${TARGETARCH} AS selected
+FROM branch-${TARGETARCH} AS branch-selected
  
 RUN apt update && apt -y upgrade
 RUN apt -y install build-essential pkg-config git
