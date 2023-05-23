@@ -5,7 +5,7 @@ on:
     types: [published]
 
 env:
-  REGISTRY_IMAGE: wyzdwdz/appimage-build
+  REGISTRY_IMAGE: wyzdwdz/appimage-ubuntu18.04
 
 jobs:
   build:
