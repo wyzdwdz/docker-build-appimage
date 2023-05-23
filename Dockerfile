@@ -9,14 +9,15 @@ ARG ARCH=aarch64
 
 FROM branch-${TARGETARCH} AS branch-selected
  
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ 
 RUN apt update && apt -y upgrade
 RUN apt -y install build-essential pkg-config git
 RUN apt -y install xvfb rxvt xauth x11vnc x11-utils x11-xserver-utils
 
 RUN apt -y install python3 python3-pip python3-markupsafe software-properties-common
 RUN sed -i 's|#!/usr/bin/python3|#!/usr/bin/python3.6|g' /usr/bin/add-apt-repository
-ENV TZ=UTC
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN add-apt-repository -y ppa:deadsnakes/ppa && apt update
 RUN apt -y install python3.8
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
