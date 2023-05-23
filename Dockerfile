@@ -1,6 +1,5 @@
-ARG TARGETARCH
-
 FROM ubuntu:18.04 AS base
+ARG TARGETARCH
 
 FROM base AS branch-amd64
 ARG ARCH=x86_64
