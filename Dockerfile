@@ -14,10 +14,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
  
 RUN apt update && apt -y upgrade
 RUN DEBIAN_FRONTEND=noninteractive apt -y install locales
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8
-ENV LANG en_US.UTF-8
+RUN sed -i 's/# \(en_US\.UTF-8 .*\)/\1/' /etc/locale.gen && \
+    locale-gen
+ENV LANG=en_US.UTF-8 \ LANGUAGE=en_US \ LC_ALL=en_US.UTF-8
 
 RUN apt -y install build-essential pkg-config git
 RUN apt -y install xvfb rxvt xauth x11vnc x11-utils x11-xserver-utils
